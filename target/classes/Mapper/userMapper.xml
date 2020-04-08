@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wen.peng.Mapper.UserMapper">
+    <!--别名方式处理字段和属性不一致    -->
+    <select id="selectList" resultType="wen.peng.User" >
+        select UserId as "id",name ,depart as "mydepart", sex from User
+    </select>
+    <resultMap id="UserMapper" type="User">
+        <id property="id" column="userId"></id>
+        <result property="mydepart" column="depart"></result>
+    </resultMap>
+    <!--resultMap映射方式处理字段和属性不一致    -->
+    <select id="selectByUserid" parameterType="int" resultMap="UserMapper">
+        select * from User where userid = #{id}
+    </select>
+    <insert id="insertUser" parameterType="wen.peng.User">
+        insert into User VALUES (#{id},#{name},#{mydepart},#{sex})
+    </insert>
+    <update id="updateByUserID" parameterType="wen.peng.User" >
+        update User set name = #{name}, depart = #{mydepart},sex=#{sex}  where userid = #{id}
+    </update>
+    <delete id="deleteByUserid" parameterType="int">
+        delete from User where userid = #{id}
+    </delete>
+    <select id="selectUserNumsByprocedure" statementType="CALLABLE" parameterType="HashMap">
+        {
+            call getCoutBysex(
+                #{sexp,jdbcType=INTEGER,mode=IN},
+                #{nums,jdbcType=INTEGER,mode=OUT}
+            )
+        }
+    </select>
+</mapper>
